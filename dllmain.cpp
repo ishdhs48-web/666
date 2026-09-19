@@ -5,6 +5,7 @@
 // Offsets derived from UE4SS dump — re-derive if game updates
 
 #include <Windows.h>
+#include <Psapi.h>
 #include <cstdint>
 #include <thread>
 #include <atomic>
