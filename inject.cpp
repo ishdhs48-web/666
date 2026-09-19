@@ -12,7 +12,8 @@ static DWORD find_pid(const wchar_t* proc_name)
     HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snap == INVALID_HANDLE_VALUE) return 0;
 
-    PROCESSENTRY32W pe{ .dwSize = sizeof(pe) };
+    PROCESSENTRY32W pe{};
+    pe.dwSize = sizeof(pe);
     DWORD pid = 0;
     if (Process32FirstW(snap, &pe))
     {
