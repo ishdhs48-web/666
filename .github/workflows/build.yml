@@ -1,0 +1,43 @@
+name: Build InfiniteHP
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Build DLL
+      run: |
+        mkdir build
+        cl.exe /std:c++17 /EHsc /O2 /W3 /LD `
+          /Fe:build\InfiniteHP.dll `
+          /Fo:build\dllmain.obj `
+          dllmain.cpp `
+          /link /DLL /SUBSYSTEM:WINDOWS `
+          kernel32.lib psapi.lib
+
+    - name: Build Injector
+      run: |
+        cl.exe /std:c++17 /EHsc /O2 /W3 `
+          /Fe:build\inject.exe `
+          /Fo:build\inject.obj `
+          inject.cpp `
+          /link /SUBSYSTEM:CONSOLE `
+          kernel32.lib psapi.lib
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: InfiniteHP-build
+        path: build\
